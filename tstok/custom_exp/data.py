@@ -16,9 +16,6 @@ class CustomDataset:
         self.tr_series = series[:int(len(series) * cfg.data.train_ratio)]
         self.val_series = series[int(len(series) * cfg.data.train_ratio):]
 
-        print("This")
-        print(self.tr_series)
-        print(cfg)
 
         self.tr_lengths = [len(s) for s in self.tr_series]
         self.val_lengths = [len(s) for s in self.val_series]
@@ -29,7 +26,6 @@ class CustomDataset:
         self.tokenizer = tokenizer
 
     def _get_sample(self, split):
-        os.write(1,"ere")
         if split != 'train':
             # randomly select a series
             series_ix = np.random.randint(len(self.tr_series))
@@ -66,11 +62,10 @@ class CustomDataset:
         return X_ids, Y_ids
 
     def get_batch(self, batch_size, split):
-        print("Here")
-        print(self.tr_series)
-        raise Exception("Bad")
         Xs = []; Ys = []
         for _ in range(batch_size):
+            print(split)
+            print("Here")
             X, Y = self._get_sample(split)
             Xs.append(X)
             Ys.append(Y)
@@ -89,16 +84,3 @@ class CustomDataset:
         # else:
         #     x, y = x.to(self.device), y.to(self.device)
         return X_ids, Y_ids
-
-
-
-
-def get_custom_dataset(df=df, tokenizer=tokenizer, cfg=cfg):
-    # data_dir: directory containing csv files
-    # tokenizer: tokenizer object
-    # max_seq_len: maximum length of the sequence
-
-    series = [df[cols].values for cols in set(list(df.columns))-{'date'}]
-    dataset = CustomDataset(series, tokenizer, cfg)
-
-    return dataset
