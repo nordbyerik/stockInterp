@@ -15,9 +15,6 @@ class CustomDataset:
         self.series = series
         self.tr_series = series[:int(len(series) * cfg.data.train_ratio)]
         self.val_series = series[int(len(series) * cfg.data.train_ratio):]
-
-        print(self.cfg.data.train_ratio)
-        print(self.tr_series)
         
         self.tr_lengths = [len(s) for s in self.tr_series]
         self.val_lengths = [len(s) for s in self.val_series]
