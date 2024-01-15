@@ -3,8 +3,8 @@ import os
 import torch
 import numpy as np
 import pandas as pd
-from tstok.tokenizer import Tokenizer
-from tstok.generic import Config
+from tstok.tstok.tokenizer import Tokenizer
+from tstok.tstok.generic import Config
 
 class CustomDataset:
     def __init__(self,
@@ -16,6 +16,10 @@ class CustomDataset:
         self.tr_series = series[:int(len(series) * cfg.data.train_ratio)]
         self.val_series = series[int(len(series) * cfg.data.train_ratio):]
 
+        print("This")
+        print(self.tr_series)
+        print(cfg)
+
         self.tr_lengths = [len(s) for s in self.tr_series]
         self.val_lengths = [len(s) for s in self.val_series]
         
@@ -25,7 +29,8 @@ class CustomDataset:
         self.tokenizer = tokenizer
 
     def _get_sample(self, split):
-        if split == 'train':
+        os.write(1,"ere")
+        if split != 'train':
             # randomly select a series
             series_ix = np.random.randint(len(self.tr_series))
             # randomly select a subsequence
@@ -61,6 +66,9 @@ class CustomDataset:
         return X_ids, Y_ids
 
     def get_batch(self, batch_size, split):
+        print("Here")
+        print(self.tr_series)
+        raise Exception("Bad")
         Xs = []; Ys = []
         for _ in range(batch_size):
             X, Y = self._get_sample(split)
@@ -85,25 +93,11 @@ class CustomDataset:
 
 
 
-def get_custom_dataset(base_path, data_name, tokenizer, cfg):
+def get_custom_dataset(df=df, tokenizer=tokenizer, cfg=cfg):
     # data_dir: directory containing csv files
     # tokenizer: tokenizer object
     # max_seq_len: maximum length of the sequence
-    data_name_mapping = {
-        'weather': 'weather/weather.csv',
-        'electricity': 'electricity/electricity.csv',
-        'exchange_rate': 'exchange_rate/exchange_rate.csv',
-        'traffic': 'traffic/traffic.csv',
-        'illness': 'illness/national_illness.csv',
-        'ettm1': 'ETT-small/ETTm1.csv',
-        'ettm2': 'ETT-small/ETTm2.csv',
-        'etth1': 'ETT-small/ETTh1.csv',
-        'etth2': 'ETT-small/ETTh2.csv'
-    }
-    file = os.path.join(base_path, data_name_mapping[data_name])
-    df = pd.read_csv(file)
 
-    df = pd.read_csv(os.path.join(base_path, data_name_mapping[data_name]))
     series = [df[cols].values for cols in set(list(df.columns))-{'date'}]
     dataset = CustomDataset(series, tokenizer, cfg)
 
