@@ -48,7 +48,7 @@ class CustomDataset:
         hindsight_std = np.zeros(Ys.shape)
         for i in range(Xs.shape[1]):
             hindsight_means[:, i] = Xs[:, :i+1].mean(axis=1)
-            hindsight_std[:, i] = Xs[:, :i+1].std(axis=1)
+            hindsight_std[:, i] = Xs[:, :i+1].astype(np.float32).std(axis=1)
 
         # standardize the context windows using it's own mean and std
         Xs_std = (Xs - Xs.mean(axis=1).reshape(-1, 1)) / (Xs.std(axis=1).reshape(-1, 1) + 1e-6)
@@ -64,8 +64,6 @@ class CustomDataset:
     def get_batch(self, batch_size, split):
         Xs = []; Ys = []
         for _ in range(batch_size):
-            print(split)
-            print("Here")
             X, Y = self._get_sample(split)
             Xs.append(X)
             Ys.append(Y)
