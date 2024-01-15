@@ -51,7 +51,7 @@ class CustomDataset:
             hindsight_std[:, i] = Xs[:, :i+1].astype(np.float32).std(axis=1)
 
         # standardize the context windows using it's own mean and std
-        Xs_std = (Xs - Xs.mean(axis=1).reshape(-1, 1)) / (Xs.std(axis=1).reshape(-1, 1) + 1e-6)
+        Xs_std = (Xs - Xs.astype(np.float32).mean(axis=1).reshape(-1, 1)) / (Xs.astype(np.float32).std(axis=1).reshape(-1, 1) + 1e-6)
 
         # standardize the targets using the context windows' lagging mean and std
         Ys_std = (Ys - hindsight_means) / (hindsight_std + 1e-6)
