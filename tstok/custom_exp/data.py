@@ -26,7 +26,7 @@ class CustomDataset:
         self.tokenizer = tokenizer
 
     def _get_sample(self, split):
-        if split != 'train':
+        if split == 'train':
             # randomly select a series
             series_ix = np.random.randint(len(self.tr_series))
             # randomly select a subsequence
