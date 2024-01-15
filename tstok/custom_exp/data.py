@@ -47,7 +47,7 @@ class CustomDataset:
         hindsight_means = np.zeros(Xs.shape)
         hindsight_std = np.zeros(Ys.shape)
         for i in range(Xs.shape[1]):
-            hindsight_means[:, i] = Xs[:, :i+1].mean(axis=1)
+            hindsight_means[:, i] = Xs[:, :i+1].astype(np.float32).mean(axis=1)
             hindsight_std[:, i] = Xs[:, :i+1].astype(np.float32).std(axis=1)
 
         # standardize the context windows using it's own mean and std
