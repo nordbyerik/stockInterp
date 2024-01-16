@@ -25,14 +25,16 @@ def estimate_loss(model, dataset, ctx, cfg):
 def plot_eval(model, dataset, cfg, ctx, path=None):
 
     fig, axs = plt.subplots(1, 1, figsize=(20, 2))
-    for ix, temp in enumerate([0]):
-        X, Y = dataset.get_batch(1, 'val')
-        with ctx:
-            logits, loss = model(X, Y)
-        axs[ix].plot(Y[1:])
-        axs[ix].plot(logits)
-        axs[ix].set_title(f'Yoink!')
-        
+    X, Y = dataset.get_batch(1, 'val')
+    with ctx:
+        logits, loss = model(X, Y)
+    print(logits)
+    print(Y)
+    print(X)
+    axs.plot(Y[1:])
+    axs.plot(logits)
+    axs.set_title(f'Yoink!')
+
     fig.tight_layout()
     plt.savefig(path)
     plt.show()
