@@ -22,24 +22,17 @@ def estimate_loss(model, dataset, ctx, cfg):
     return out
 
 @torch.no_grad()
-def plot_eval(model, tokenizer, device, path=None):
-    def _gen_daily_signal():
-        num_days = 7
-        num_dp_per_day = 24
-        x = np.linspace(0, num_days*2*np.pi, num_dp_per_day*num_days)
-        e = np.random.randn(num_dp_per_day*num_days) * 0.3
-        x = np.sin(x+e) + 5
-        return x
+def plot_eval(model, dataset, cfg, ctx, path=None):
 
-    N = 5
-    fig, axs = plt.subplots(N, 1, figsize=(20, 2*N))
-    for ix, temp in enumerate(np.linspace(0.2, 0.99, N)):
-        x = _gen_daily_signal()
-        y = gen_forecast(x, model, tokenizer, 100, device, temperature=temp, top_k=100)
-
-        axs[ix].plot(range(len(x)), y[:len(x)])
-        axs[ix].plot(range(len(x), len(y)), y[len(x):])
-        axs[ix].set_title(f'Temperature: {temp:.2f}')
+    fig, axs = plt.subplots(1, 1, figsize=(20, 2))
+    for ix, temp in enumerate([0]):
+        X, Y = dataset.get_batch(1, 'val')
+        with ctx:
+            logits, loss = model(X, Y)
+        axs[ix].plot(Y[1:])
+        axs[ix].plot(logits)
+        axs[ix].set_title(f'Yoink!')
+        
     fig.tight_layout()
     plt.savefig(path)
     plt.show()
