@@ -82,3 +82,6 @@ class CustomDataset:
         # else:
         #     x, y = x.to(self.device), y.to(self.device)
         return X_ids, Y_ids
+
+    def min_max(self):
+        return np.max(self.tr_series), np.min(self.tr_series)
